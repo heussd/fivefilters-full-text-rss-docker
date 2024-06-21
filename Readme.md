@@ -35,3 +35,4 @@ volumes:
 -   Interesting endpoints (see tab [Request & Response](http://localhost/#request)):
     -   Article extraction: `http://localhost/extract.php?url=[url]`
     -   Feed conversion: `http://localhost/makefulltextfeed.php?url=[url]`
+-   See [calls.http](calls.http) for example calls

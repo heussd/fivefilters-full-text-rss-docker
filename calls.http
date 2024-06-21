@@ -1,0 +1,16 @@
+@baseUrl=http://localhost:80
+
+### Index page
+GET {{baseUrl}}/index.php
+
+
+### Extract feed with max 1 article
+GET {{baseUrl}}/makefulltextfeed.php
+    ?url=sec%3A%2F%2Fwww.tagesschau.de%2Findex~rss2.xml
+    &max=1
+    &links=preserve
+
+### Extract article without images
+GET {{baseUrl}}/extract.php
+    ?url=https://en.wikipedia.org/wiki/Vincent_van_Gogh
+    &images=0
