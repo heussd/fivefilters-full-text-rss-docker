@@ -31,12 +31,14 @@ jobs:
             - name: Build amd64 image
               run: |
                   docker buildx bake amd64 --load
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 'latest'
             - name: Test amd64 image
               run: |
                   docker compose up --no-build --pull never -d
                   sleep 5s
-                  curl --fail 'http://localhost:80'
-                  curl --fail 'http://localhost:80/makefulltextfeed.php?url=sec%3A%2F%2Fwww.tagesschau.de%2Findex~rss2.xml&max=1&links=preserve'
+                  npx rest-cli calls.http --show headers
                   docker compose down
             - name: Build all images
               run: |
