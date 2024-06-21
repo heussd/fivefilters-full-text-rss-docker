@@ -1,9 +1,7 @@
-name: Docker build and push
+name: Build, test and push Docker images
 
 on:
     push:
-        branches:
-            - master
         paths-ignore:
             - '**.md'
     schedule:
@@ -12,9 +10,8 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
-
         steps:
-            - name: checkout code
+            - name: Checkout code
               uses: actions/checkout@v2
 
             - name: Set up QEMU
@@ -31,15 +28,20 @@ jobs:
             - name: Login to docker hub
               run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-            - name: build the amd64 image
+            - name: Build amd64 image
               run: |
                   docker buildx bake amd64 --load
-            - name: test amd64 image
+            - name: Test amd64 image
               run: |
                   docker compose up --no-build --pull never -d
+                  sleep 5s
                   curl --fail 'http://localhost:80'
-                  curl --fail 'http://localhost/makefulltextfeed.php?url=sec%3A%2F%2Fwww.tagesschau.de%2Findex~rss2.xml&max=1&links=preserve'
+                  curl --fail 'http://localhost:80/makefulltextfeed.php?url=sec%3A%2F%2Fwww.tagesschau.de%2Findex~rss2.xml&max=1&links=preserve'
                   docker compose down
-            - name: build and push all images
+            - name: Build all images
+              run: |
+                  docker buildx bake
+            - name: Release images to Dockerhub
+              if: github.ref == 'refs/heads/master'
               run: |
                   docker buildx bake --push
