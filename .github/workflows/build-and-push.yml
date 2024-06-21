@@ -1,40 +1,45 @@
 name: Docker build and push
 
 on:
-  push:
-    branches:
-      - master
-    paths-ignore:
-      - '**.md'
-      - 'docker-compose.yml'
-  schedule:
-    - cron: '0 13 * * 0'
-
+    push:
+        branches:
+            - master
+        paths-ignore:
+            - '**.md'
+    schedule:
+        - cron: '0 13 * * 0'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: checkout code
-        uses: actions/checkout@v2
-        
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-        with:
-          platforms: all
+        steps:
+            - name: checkout code
+              uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
-        with:
-          version: latest
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v1
+              with:
+                  platforms: all
 
-      - name: Login to docker hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+            - name: Set up Docker Buildx
+              id: buildx
+              uses: docker/setup-buildx-action@v3
+              with:
+                  version: latest
 
-      - name: build the image
-        run: |
-          docker buildx build --push \
-            --tag heussd/fivefilters-full-text-rss:latest \
-            --platform  linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6 .
+            - name: Login to docker hub
+              run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+            - name: build the amd64 image
+              run: |
+                  docker buildx bake amd64 --load
+            - name: test amd64 image
+              run: |
+                  docker compose up --no-build --pull never -d
+                  curl --fail 'http://localhost:80'
+                  curl --fail 'http://localhost/makefulltextfeed.php?url=sec%3A%2F%2Fwww.tagesschau.de%2Findex~rss2.xml&max=1&links=preserve'
+                  docker compose down
+            - name: build and push all images
+              run: |
+                  docker buildx bake --push
