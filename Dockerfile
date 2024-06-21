@@ -2,13 +2,13 @@
 # Enriches third-party RSS feeds with full text articles
 # https://bitbucket.org/fivefilters/full-text-rss
 
-FROM	heussd/git as gitsrc
+FROM	alpine/git AS gitsrc
 WORKDIR /ftr
 RUN	git clone https://bitbucket.org/fivefilters/full-text-rss.git . && \
 		git reset --hard 384d52fd83361ffd6e7f28bd39b322970a015a28
 
 
-FROM	heussd/git as gitconfig
+FROM	alpine/git AS gitconfig
 WORKDIR	/ftr-site-config
 RUN	git clone https://github.com/fivefilters/ftr-site-config . 
 
