@@ -20,7 +20,9 @@ FROM	php:5-apache
 RUN 	echo "deb http://archive.debian.org/debian stretch main contrib non-free" > /etc/apt/sources.list
 
 RUN   apt-get update && \
-      apt-get -y install --no-install-recommends \
+      apt-get install \
+      	-y --allow-unauthenticated \
+      	--no-install-recommends \
       libtidy-dev \
       && rm -rf /var/lib/apt/lists/*
 
