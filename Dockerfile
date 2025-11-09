@@ -29,8 +29,6 @@ RUN   apt-get update && \
 RUN		docker-php-ext-install tidy
 
 
-COPY php.ini /usr/local/etc/php/
-
 COPY --from=gitsrc /ftr /var/www/html
 COPY --from=gitconfig /ftr-site-config/.* /ftr-site-config/* /var/www/html/site_config/standard/
 

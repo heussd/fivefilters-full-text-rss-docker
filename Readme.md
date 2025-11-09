@@ -16,6 +16,8 @@ Not affiliated with [fivefilters.org](http://fivefilters.org/). The Dockerfile i
 services:
     fullfeedrss:
         image: 'heussd/fivefilters-full-text-rss:latest'
+        mem_limit: 2G
+        restart: always
         environment:
             # Leave empty to disable admin section
             - FTR_ADMIN_PASSWORD=
