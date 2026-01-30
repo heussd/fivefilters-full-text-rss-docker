@@ -1,6 +1,6 @@
 # Docker Image for fivefilters Full-Text RSS service
 
-![Docker build and push](https://github.com/heussd/fivefilters-full-text-rss-docker/workflows/Docker%20build%20and%20push/badge.svg)
+[![Build, test and push Docker images](https://github.com/heussd/fivefilters-full-text-rss-docker/actions/workflows/build-and-push.yml/badge.svg)](https://github.com/heussd/fivefilters-full-text-rss-docker/actions/workflows/build-and-push.yml)
 ![Number of Image Pulls](https://img.shields.io/docker/pulls/heussd/fivefilters-full-text-rss)
 ![Image size](https://img.shields.io/docker/image-size/heussd/fivefilters-full-text-rss/latest)
 
@@ -10,7 +10,7 @@ Not affiliated with [fivefilters.org](http://fivefilters.org/). The Dockerfile i
 
 ## User Guide
 
--   Use the following [compose.yml](compose.yml)
+- Use the following [compose.yml](compose.yml)
 
 ```yaml
 services:
@@ -29,12 +29,12 @@ volumes:
     rss-cache:
 ```
 
--   Start it with `docker-compose up`
--   Visit [http://localhost:80](http://localhost:80) for the integrated web UI
+- Start it with `docker-compose up`
+- Visit [http://localhost:80](http://localhost:80) for the integrated web UI
 
 ![](webui.png)
 
--   Interesting endpoints (see tab [Request & Response](http://localhost/#request)):
-    -   Article extraction: `http://localhost/extract.php?url=[url]`
-    -   Feed conversion: `http://localhost/makefulltextfeed.php?url=[url]`
--   See [calls.http](calls.http) for example calls
+- Interesting endpoints (see tab [Request & Response](http://localhost/#request)):
+  - Article extraction: `http://localhost/extract.php?url=[url]`
+  - Feed conversion: `http://localhost/makefulltextfeed.php?url=[url]`
+- See [calls.http](calls.http) for example calls
