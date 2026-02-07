@@ -2,6 +2,15 @@
 
 ### Index page
 GET {{baseUrl}}/index.php
+?? status == 200
+?? header content-type == text/html; charset=UTF-8
+{{
+test.hasResponseBody();
+const assert = require('assert');
+test('response body has expected title', () => {
+assert(response.body.includes("<title>Full-Text RSS Feeds | from fivefilters.org</title>"));
+});
+}}
 
 
 ### Extract feed with max 1 article
@@ -9,8 +18,40 @@ GET {{baseUrl}}/makefulltextfeed.php
     ?url=sec%3A%2F%2Fwww.tagesschau.de%2Findex~rss2.xml
     &max=1
     &links=preserve
+?? status == 200
+?? header content-type == text/xml; charset=UTF-8
+{{
+test.hasResponseBody();
+const assert = require('assert');
+test('response body has expected content', () => {
+    assert(response.body.includes("<link>https://www.tagesschau.de/</link>"));
+    assert(response.body.includes('<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/">'));
+});
+
+const links = [];
+const re = /<link\b[^>]*>([\s\S]*?)<\/link>/gi;
+let m;
+while ((m = re.exec(response.body)) !== null) {
+    links.push(m[1].trim());
+}
+test('response body has two links as expected', () => {
+    assert(links.length === 2);
+    $global.article=links[1];
+});
+}}
+
 
 ### Extract article without images
 GET {{baseUrl}}/extract.php
-    ?url=https://en.wikipedia.org/wiki/Vincent_van_Gogh
+    ?url={{$global.article}}
     &images=0
+?? status == 200
+?? header content-type == application/json; charset=UTF-8
+?? body title exists
+?? body excerpt exists
+?? body url exists
+?? body effective_url exists
+?? body domain exists
+?? body word_count exists
+?? body content exists
+?? js response.parsedBody.content.length > 100

@@ -38,7 +38,7 @@ jobs:
               run: |
                   docker compose up --no-build --pull never -d
                   sleep 5s
-                  npx rest-cli calls.http --show headers
+                  npx -y httpyac calls.http --all --output short --output-failed exchange
                   docker compose down
             - name: Build all images
               run: |
