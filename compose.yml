@@ -8,6 +8,7 @@ services:
       - FTR_ADMIN_PASSWORD=
     volumes:
       - "rss-cache:/var/www/html/cache/rss"
+      - "./custom:/var/www/html/site_config/custom"
     ports:
       - "80:80"
 volumes:

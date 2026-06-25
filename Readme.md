@@ -17,22 +17,23 @@ The Docker image includes [site-specific article extraction rules](https://githu
 
 ```yaml
 services:
-    fullfeedrss:
-        image: 'heussd/fivefilters-full-text-rss:latest'
-        mem_limit: 2G
-        restart: always
-        environment:
-            # Leave empty to disable admin section
-            - FTR_ADMIN_PASSWORD=
-        volumes:
-            - 'rss-cache:/var/www/html/cache/rss'
-        ports:
-            - '80:80'
+  fullfeedrss:
+    image: "heussd/fivefilters-full-text-rss:latest"
+    mem_limit: 2G
+    restart: always
+    environment:
+      # Leave empty to disable admin section
+      - FTR_ADMIN_PASSWORD=
+    volumes:
+      - "rss-cache:/var/www/html/cache/rss"
+      - "./custom:/var/www/html/site_config/custom"
+    ports:
+      - "80:80"
 volumes:
-    rss-cache:
+  rss-cache:
 ```
 
-- Start it with `docker-compose up`
+- Start it with `docker compose up`
 - Visit [http://localhost:80](http://localhost:80) for the integrated web UI
 
 ![](webui.png)
