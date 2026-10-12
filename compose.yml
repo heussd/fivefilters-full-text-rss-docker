@@ -6,10 +6,30 @@ services:
     environment:
       # Leave empty to disable admin section
       - FTR_ADMIN_PASSWORD=
+      # FlareSolverr URL
+      - FTR_FLARESOLVERR_URL=http://flaresolverr:8191
+      # Optional challenge timeout in milliseconds
+      - FTR_FLARESOLVERR_TIMEOUT=60000
     volumes:
       - "rss-cache:/var/www/html/cache/rss"
       - "./custom:/var/www/html/site_config/custom"
     ports:
       - "80:80"
+
+  flaresolverr:
+    # DockerHub mirror flaresolverr/flaresolverr:latest
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_FILE=${LOG_FILE:-none}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Europe/London
+    ports:
+      - "${PORT:-8191}:8191"
+    volumes:
+      - /var/lib/flaresolver:/config
+    restart: unless-stopped
 volumes:
   rss-cache:

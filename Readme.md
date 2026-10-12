@@ -24,11 +24,31 @@ services:
     environment:
       # Leave empty to disable admin section
       - FTR_ADMIN_PASSWORD=
+      # FlareSolverr URL
+      - FTR_FLARESOLVERR_URL=http://flaresolverr:8191
+      # Optional challenge timeout in milliseconds
+      - FTR_FLARESOLVERR_TIMEOUT=60000
     volumes:
       - "rss-cache:/var/www/html/cache/rss"
       - "./custom:/var/www/html/site_config/custom"
     ports:
       - "80:80"
+
+  flaresolverr:
+    # DockerHub mirror flaresolverr/flaresolverr:latest
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_FILE=${LOG_FILE:-none}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Europe/London
+    ports:
+      - "${PORT:-8191}:8191"
+    volumes:
+      - /var/lib/flaresolver:/config
+    restart: unless-stopped
 volumes:
   rss-cache:
 ```
@@ -42,3 +62,21 @@ volumes:
   - Article extraction: `http://localhost/extract.php?url=[url]`
   - Feed conversion: `http://localhost/makefulltextfeed.php?url=[url]`
 - See [calls.http](calls.http) for example calls
+
+## FlareSolverr
+
+[FlareSolverr](https://github.com/Flaresolverr/Flaresolverr) is a proxy server to bypass Cloudflare and DDoS-GUARD protection.
+
+To disable it, clear `FTR_FLARESOLVERR_URL` and remove the `flaresolverr` service in the compose file. 
+
+For an existing instance, set `FTR_FLARESOLVERR_URL=flaresolverr_url` and remove the bundled service.
+
+
+Check **FlareSolverr** in the web UI or use:
+
+```text
+fivefilters_url/makefulltextfeed.php?url=rss_feed_url&flaresolverr=1
+```
+
+URL-encode `rss_feed_url`. This fetches both the feed and its article pages.
+`/extract.php` uses FlareSolverr automatically when configured; `flaresolverr=0` disables it for a request.

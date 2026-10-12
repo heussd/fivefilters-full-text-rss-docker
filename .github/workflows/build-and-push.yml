@@ -36,7 +36,7 @@ jobs:
                   node-version: 'latest'
             - name: Test amd64 image
               run: |
-                  docker compose up --no-build --pull never -d
+                  docker compose up --no-build --pull never -d fullfeedrss
                   sleep 5s
                   npx -y httpyac calls.http --all --output short --output-failed exchange
                   docker compose down

@@ -41,10 +41,11 @@ test('response body has two links as expected', () => {
 }}
 
 
-### Extract article without images
+### Extract article without images (native fetching)
 GET {{baseUrl}}/extract.php
     ?url={{$global.article}}
     &images=0
+    &flaresolverr=0
 ?? status == 200
 ?? header content-type == application/json; charset=UTF-8
 ?? body title exists

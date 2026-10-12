@@ -32,6 +32,21 @@ RUN		docker-php-ext-install tidy
 COPY --from=gitsrc /ftr /var/www/html
 COPY --from=gitconfig /ftr-site-config/.* /ftr-site-config/* /var/www/html/site_config/standard/
 
+# Optional browser-backed fetching for article extraction and feed conversion.
+COPY flaresolverr /tmp/ftr-flaresolverr
+RUN php /tmp/ftr-flaresolverr/install.php /var/www/html && \
+    php -l /var/www/html/makefulltextfeed.php && \
+    php -l /var/www/html/makefulltextfeed-core.php && \
+    php -l /var/www/html/extract.php && \
+    php -l /var/www/html/index.php && \
+    php /tmp/ftr-flaresolverr/test.php /var/www/html && \
+    php /tmp/ftr-flaresolverr/test-feed.php /var/www/html feed && \
+    php /tmp/ftr-flaresolverr/test-feed.php /var/www/html extract && \
+    php /tmp/ftr-flaresolverr/test-feed.php /var/www/html inputhtml && \
+    (php /tmp/ftr-flaresolverr/test-feed.php /var/www/html error; test "$?" -eq 1) && \
+    (php /tmp/ftr-flaresolverr/test-feed.php /var/www/html error-json; test "$?" -eq 1) && \
+    rm -rf /tmp/ftr-flaresolverr
+
 RUN		mkdir -p /var/www/html/cache/rss && \
 			chmod -Rv 777 /var/www/html/cache && \
 			chmod -Rv 777 /var/www/html/site_config
@@ -39,4 +54,5 @@ RUN		mkdir -p /var/www/html/cache/rss && \
 VOLUME	/var/www/html/cache
 
 COPY	custom_config.php /var/www/html/
+
 
