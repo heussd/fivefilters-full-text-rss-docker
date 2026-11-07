@@ -1,7 +1,12 @@
 # Docker Image for fivefilters Full-Text RSS service
 
-[![Build, test and push Docker images](https://github.com/heussd/fivefilters-full-text-rss-docker/actions/workflows/build-and-push.yml/badge.svg)](https://github.com/heussd/fivefilters-full-text-rss-docker/actions/workflows/build-and-push.yml)
-![Last build date](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fheussd%2Ffivefilters-full-text-rss-docker%2Factions%2Fworkflows%2F4311790%2Fruns%3Fstatus%3Dcompleted%26per_page%3D1&query=%24.workflow_runs%5B0%5D.run_started_at&label=last%20build)
+> [!CAUTION]
+> **This project is discontinued and no longer maintained.**
+>
+> The image is based on PHP 5, which is end-of-life and vulnerable to the actively exploited [PHP2Shell](https://www.sophos.com/en-us/security-advisories/sophos-sa-20261021-php2shell) remote code execution vulnerabilities (CVE-2026-109618, CVE-2026-109619). Fixes are only available for PHP 8.2 and newer, and the last freely published version of Full-Text RSS does not run on PHP 8.
+>
+> **Do not expose this image to the internet. Please migrate away from it.** For a maintained version, see [fivefilters.org](https://www.fivefilters.org/full-text-rss/). Details: [issue #9](https://github.com/heussd/fivefilters-full-text-rss-docker/issues/9).
+
 ![Number of Image Pulls](https://img.shields.io/docker/pulls/heussd/fivefilters-full-text-rss)
 ![Image size](https://img.shields.io/docker/image-size/heussd/fivefilters-full-text-rss/latest)
 
@@ -9,7 +14,7 @@ This is a containerized version of [fivefilters full-text-rss](https://www.fivef
 
 Not affiliated with [fivefilters.org](http://fivefilters.org/). The Dockerfile is licensed under [MIT conditions](LICENSE).
 
-The Docker image includes [site-specific article extraction rules](https://github.com/fivefilters/ftr-site-config) and is [rebuilt weekly](https://github.com/heussd/fivefilters-full-text-rss-docker/blob/master/.github/workflows/build-and-push.yml#L8) with the latest rules. For best results, pull the updated image regularly.
+The Docker image includes [site-specific article extraction rules](https://github.com/fivefilters/ftr-site-config) as of the last build. Images are no longer rebuilt.
 
 ## User Guide
 
